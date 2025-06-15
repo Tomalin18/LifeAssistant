@@ -233,4 +233,63 @@ export interface AppEvent {
   type: string;
   payload?: any;
   timestamp: Date;
+}
+
+// 支出追蹤類型
+export interface Expense {
+  id: string;
+  title: string;
+  amount: number;
+  category: ExpenseCategory;
+  date: Date;
+  description?: string;
+  location?: string;
+  paymentMethod: PaymentMethod;
+  tags: string[];
+  receiptImage?: string;
+  relatedShoppingItemId?: string;
+  relatedRestaurantId?: string;
+}
+
+export type ExpenseCategory = 
+  | 'food' 
+  | 'shopping' 
+  | 'transport' 
+  | 'entertainment' 
+  | 'healthcare' 
+  | 'utilities' 
+  | 'education' 
+  | 'other';
+
+export type PaymentMethod = 
+  | 'cash' 
+  | 'credit_card' 
+  | 'debit_card' 
+  | 'mobile_payment' 
+  | 'bank_transfer';
+
+export interface Budget {
+  id: string;
+  name: string;
+  category: ExpenseCategory;
+  limit: number;
+  period: 'weekly' | 'monthly' | 'yearly';
+  spent: number;
+  startDate: Date;
+  endDate: Date;
+  isActive: boolean;
+}
+
+export interface ExpenseStats {
+  totalSpent: number;
+  categoryBreakdown: Record<ExpenseCategory, number>;
+  monthlySpending: Array<{
+    month: string;
+    amount: number;
+  }>;
+  topCategories: Array<{
+    category: ExpenseCategory;
+    amount: number;
+    percentage: number;
+  }>;
 } 

@@ -4,8 +4,8 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { HomeScreen } from '@/screens/HomeScreen';
 import { ShoppingListScreen } from '@/screens/ShoppingListScreen';
 import { RestaurantScreen } from '@/screens/RestaurantScreen';
+import ExpenseScreen from '@/screens/ExpenseScreen';
 import { FavoritesScreen } from '@/screens/FavoritesScreen';
-import { NotificationsScreen } from '@/screens/NotificationsScreen';
 import { ProfileScreen } from '@/screens/ProfileScreen';
 import { useTheme } from '@/hooks/useTheme';
 
@@ -14,8 +14,8 @@ type TabParamList = {
   Home: undefined;
   Shopping: undefined;
   Restaurant: undefined;
+  Expense: undefined;
   Favorites: undefined;
-  Notifications: undefined;
   Profile: undefined;
 };
 
@@ -52,11 +52,11 @@ const BottomTabNavigator: React.FC = () => {
             case 'Restaurant':
               iconEmoji = '🍽️';
               break;
+            case 'Expense':
+              iconEmoji = '💰';
+              break;
             case 'Favorites':
               iconEmoji = '❤️';
-              break;
-            case 'Notifications':
-              iconEmoji = '🔔';
               break;
             case 'Profile':
               iconEmoji = '👤';
@@ -105,11 +105,11 @@ const BottomTabNavigator: React.FC = () => {
             case 'Restaurant':
               label = '餐廳';
               break;
+            case 'Expense':
+              label = '記帳';
+              break;
             case 'Favorites':
               label = '收藏';
-              break;
-            case 'Notifications':
-              label = '通知';
               break;
             case 'Profile':
               label = '個人';
@@ -141,17 +141,17 @@ const BottomTabNavigator: React.FC = () => {
         }}
       />
       <Tab.Screen 
+        name="Expense" 
+        component={ExpenseScreen}
+        options={{
+          tabBarLabel: '記帳',
+        }}
+      />
+      <Tab.Screen 
         name="Favorites" 
         component={FavoritesScreen}
         options={{
           tabBarLabel: '收藏',
-        }}
-      />
-      <Tab.Screen 
-        name="Notifications" 
-        component={NotificationsScreen}
-        options={{
-          tabBarLabel: '通知',
         }}
       />
       <Tab.Screen 
