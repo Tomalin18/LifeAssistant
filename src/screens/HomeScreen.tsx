@@ -12,6 +12,7 @@ import { StatusBar } from 'expo-status-bar';
 import { useTheme } from '@/hooks/useTheme';
 import { useShoppingStore } from '@/store/shoppingStore';
 import { useRestaurantStore } from '@/store/restaurantStore';
+import { useExpenseStore } from '@/store/expenseStore';
 import { ActionCard } from '@/components/common/Button/Button';
 import { Card, InfoCard, RestaurantCard } from '@/components/common/Card/Card';
 
@@ -21,6 +22,7 @@ export const HomeScreen: React.FC = () => {
   const { theme } = useTheme();
   const shoppingStore = useShoppingStore();
   const restaurantStore = useRestaurantStore();
+  const expenseStore = useExpenseStore();
 
   const [refreshing, setRefreshing] = React.useState(false);
 
@@ -126,6 +128,11 @@ export const HomeScreen: React.FC = () => {
     console.log('Navigate to Restaurant');
   };
 
+  const handleExpensePress = () => {
+    // 導航到支出追蹤頁面
+    console.log('Navigate to Expense Tracker');
+  };
+
   const handleRestaurantCardPress = (restaurantId: string) => {
     console.log('Navigate to Restaurant Details:', restaurantId);
   };
@@ -213,18 +220,91 @@ export const HomeScreen: React.FC = () => {
         <View style={[styles.actionCards, { paddingHorizontal: theme.spacing.md }]}>
           <ActionCard
             title="購物清單"
-            icon={<Text style={{ fontSize: 32 }}>🛒</Text>}
+            icon={<Text style={{ fontSize: 28 }}>🛒</Text>}
             backgroundColor={theme.colors.primary}
             onPress={handleShoppingPress}
-            style={{ marginRight: theme.spacing.sm }}
+            style={{ marginRight: theme.spacing.xs }}
           />
           <ActionCard
             title="餐廳預訂"
-            icon={<Text style={{ fontSize: 32 }}>🍽️</Text>}
+            icon={<Text style={{ fontSize: 28 }}>🍽️</Text>}
             backgroundColor={theme.colors.secondary}
             onPress={handleRestaurantPress}
-            style={{ marginLeft: theme.spacing.sm }}
+            style={{ marginHorizontal: theme.spacing.xs }}
           />
+          <ActionCard
+            title="支出記帳"
+            icon={<Text style={{ fontSize: 28 }}>💰</Text>}
+            backgroundColor={theme.colors.accent}
+            onPress={handleExpensePress}
+            style={{ marginLeft: theme.spacing.xs }}
+          />
+        </View>
+
+        {/* 本月支出統計 */}
+        <View style={[styles.section, { paddingHorizontal: theme.spacing.md }]}>
+          <Text
+            style={[
+              styles.sectionTitle,
+              {
+                fontSize: theme.typography.fontSizes.xl,
+                fontWeight: theme.typography.fontWeights.semibold,
+                color: theme.colors.text.primary,
+                marginBottom: theme.spacing.md,
+              },
+            ]}
+          >
+            本月支出概覽
+          </Text>
+          
+          <InfoCard
+            title="月度支出統計"
+            subtitle={`本月共花費 NT$ ${expenseStore.getExpenseStats('month').totalSpent.toLocaleString()}`}
+            icon={<Text style={{ fontSize: 24 }}>📊</Text>}
+            onPress={handleExpensePress}
+          >
+            <View>
+              <Text
+                style={{
+                  fontSize: theme.typography.fontSizes.sm,
+                  color: theme.colors.text.secondary,
+                  marginBottom: theme.spacing.sm,
+                }}
+              >
+                主要支出類別：
+              </Text>
+              {expenseStore.getExpenseStats('month').topCategories.slice(0, 3).map((category, index) => (
+                <Text
+                  key={index}
+                  style={{
+                    fontSize: theme.typography.fontSizes.sm,
+                    color: theme.colors.text.primary,
+                    marginLeft: theme.spacing.sm,
+                  }}
+                >
+                  • {category.category === 'food' ? '餐飲' :
+                      category.category === 'shopping' ? '購物' :
+                      category.category === 'transport' ? '交通' :
+                      category.category === 'entertainment' ? '娛樂' :
+                      category.category === 'healthcare' ? '醫療' :
+                      category.category === 'utilities' ? '生活費用' :
+                      category.category === 'education' ? '教育' : '其他'}: NT$ {category.amount.toLocaleString()} ({category.percentage.toFixed(1)}%)
+                </Text>
+              ))}
+              {expenseStore.getExpenseStats('month').topCategories.length === 0 && (
+                <Text
+                  style={{
+                    fontSize: theme.typography.fontSizes.sm,
+                    color: theme.colors.text.secondary,
+                    marginLeft: theme.spacing.sm,
+                    fontStyle: 'italic',
+                  }}
+                >
+                  點擊「支出記帳」開始記錄您的花費
+                </Text>
+              )}
+            </View>
+          </InfoCard>
         </View>
 
         {/* 智能購物建議 */}
